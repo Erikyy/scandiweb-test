@@ -10,26 +10,34 @@ export class Checkout extends SourceCheckout {
         this.state = {
             progressbarWidth: percentageincrement,
             progressCount: 0,
+            doneSteps: [],
         }
     }
     updateStep() {
+        let prevStep = "";
         const percentageincrement = 100 / Object.keys(this.stepMap).length + 1;
         const { checkoutStep, history } = this.props;
         const { url } = this.stepMap[checkoutStep];
-
+        Object.keys(this.stepMap).forEach((el, index) => {
+            if (el === checkoutStep && index !== 0) {
+                prevStep = Object.keys(this.stepMap)[index - 1];
+            }
+            
+        });
         history.push(appendWithStoreCode(`${ CHECKOUT_URL }${ url }`));
         this.setState((prevstate) => ({ 
             progressbarWidth: prevstate.progressbarWidth + percentageincrement, 
-            progressCount: prevstate.progressCount + 1}));
-
-      
+            progressCount: prevstate.progressCount + 1,
+            doneSteps: [...prevstate.doneSteps, prevStep]
+        }));
     }
 
     renderProgressItem(step, stepkey, index) {
         return (<div block="ProgressStepContainer">
             <div block="ProgressStep">
-                <div  block={`ProgressIndex ${stepkey === this.props.checkoutStep ? "ActiveStep" : ""}`}>
-                    <p>{index}</p>
+                <div  block={`ProgressIndex ${this.state.doneSteps.includes(stepkey) ? "FinishedStep" : ""} ${stepkey === this.props.checkoutStep ? "ActiveStep" : ""}`}>
+                    {this.state.doneSteps.includes(stepkey) ? <div block="CheckIconContainer"><div block="CheckIcon"></div> </div>: <p>{index}</p> }
+                    
                     </div>
                 <div>{step.title}</div>
                 </div>
