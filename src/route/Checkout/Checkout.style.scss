@@ -32,6 +32,7 @@
         position: absolute;
         height: 5px;
         background: var(--primary-base-color);
+        max-width: 100%;
         top: 35%;
         z-index: 1;
         transition: width 1s ease;
@@ -71,16 +72,20 @@
     }
     .ProgressIndex::before {
         content: "";
+        position: relative;
         background-color: white;
-        z-index: 2;
-        min-width: 10px;
+        z-index: 1;
+        min-width: 20%;
     }
 
     .ProgressIndex::after {
         content: "";
+        position: relative;
         background-color: white;
-        z-index: 2;
-        min-width: 10px;
+        z-index: 1;
+        min-width: 20%;
+        width: 100px;
+        height: 100%;
         border-radius: 15px;
     }
 
@@ -96,7 +101,7 @@
         width: 30px;
         height: 30px;
         text-align: center;
-        z-index: 1;
+        z-index: 6;
         line-height: 25px;
     }
     .ProgressIndex > p {

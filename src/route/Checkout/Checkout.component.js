@@ -6,20 +6,23 @@ import { appendWithStoreCode } from 'Util/Url';
 export class Checkout extends SourceCheckout {
     constructor(props) {
         super(props);
+        const percentageincrement = 100 / Object.keys(this.stepMap).length + 1;
         this.state = {
-            progressbarWidth: 35,
+            progressbarWidth: percentageincrement,
+            progressCount: 0,
         }
     }
     updateStep() {
+        const percentageincrement = 100 / Object.keys(this.stepMap).length + 1;
         const { checkoutStep, history } = this.props;
         const { url } = this.stepMap[checkoutStep];
 
         history.push(appendWithStoreCode(`${ CHECKOUT_URL }${ url }`));
-        this.setState({ progressbarWidth: 65, })
-    }
+        this.setState((prevstate) => ({ 
+            progressbarWidth: prevstate.progressbarWidth + percentageincrement, 
+            progressCount: prevstate.progressCount + 1}));
 
-    getProgressBarWidth() {
-        
+      
     }
 
     renderProgressItem(step, stepkey, index) {
@@ -35,7 +38,7 @@ export class Checkout extends SourceCheckout {
 
     renderProgressbar() { 
         return <div block="ProgressBar" role="button">
-            <div block="ProgressBar-Bar" style={{width: `${this.state.progressbarWidth}%`}} />
+            <div block="ProgressBar-Bar" style={{width: `${Math.round(this.state.progressbarWidth)}%`}} />
             <div block="ProgressList">{
             Object.keys(this.stepMap).map((stepkey, index) => {
                 if (this.stepMap[stepkey] !== this.stepMap.DETAILS_STEP) {
