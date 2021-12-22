@@ -2,8 +2,34 @@ import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.compon
 import ContentWrapper from 'SourceComponent/ContentWrapper';
 
 export class Checkout extends SourceCheckout {
-    renderProgressbar() {
-        return <h1>progress bar</h1>
+    constructor(props) {
+        super(props);
+        
+    }
+
+    renderProgressItem(step, index) {
+        
+        return (<div block="ProgressStepContainer">
+            <div block="ProgressStep">
+                <div block={`ProgressIndex ${step === this.props.currentStep ? "ActiveStep" : ""}`}>
+                    <p>{index}</p>
+                    </div>
+                <div>{step.title}</div>
+                </div>
+            </div>);
+    }
+
+    renderProgressbar() { 
+        return <div block="ProgressBar">
+            <div block="ProgressBar-Bar" style={{width: "35%"}} />
+            <div block="ProgressList">{
+            Object.keys(this.stepMap).map((stepkey, index) => {
+                if (this.stepMap[stepkey] !== this.stepMap.DETAILS_STEP) {
+                    return this.renderProgressItem(this.stepMap[stepkey], index + 1);
+                }
+                return null;
+            })
+        }</div></div>
     }
     
     render() {
