@@ -1,17 +1,31 @@
+import { CHECKOUT_URL } from 'SourceRoute/Checkout/Checkout.config';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component'
 import ContentWrapper from 'SourceComponent/ContentWrapper';
+import { appendWithStoreCode } from 'Util/Url';
 
 export class Checkout extends SourceCheckout {
     constructor(props) {
         super(props);
+        this.state = {
+            progressbarWidth: 35,
+        }
+    }
+    updateStep() {
+        const { checkoutStep, history } = this.props;
+        const { url } = this.stepMap[checkoutStep];
+
+        history.push(appendWithStoreCode(`${ CHECKOUT_URL }${ url }`));
+        this.setState({ progressbarWidth: 65, })
+    }
+
+    getProgressBarWidth() {
         
     }
 
-    renderProgressItem(step, index) {
-        
+    renderProgressItem(step, stepkey, index) {
         return (<div block="ProgressStepContainer">
             <div block="ProgressStep">
-                <div block={`ProgressIndex ${step === this.props.currentStep ? "ActiveStep" : ""}`}>
+                <div  block={`ProgressIndex ${stepkey === this.props.checkoutStep ? "ActiveStep" : ""}`}>
                     <p>{index}</p>
                     </div>
                 <div>{step.title}</div>
@@ -20,12 +34,12 @@ export class Checkout extends SourceCheckout {
     }
 
     renderProgressbar() { 
-        return <div block="ProgressBar">
-            <div block="ProgressBar-Bar" style={{width: "35%"}} />
+        return <div block="ProgressBar" role="button">
+            <div block="ProgressBar-Bar" style={{width: `${this.state.progressbarWidth}%`}} />
             <div block="ProgressList">{
             Object.keys(this.stepMap).map((stepkey, index) => {
                 if (this.stepMap[stepkey] !== this.stepMap.DETAILS_STEP) {
-                    return this.renderProgressItem(this.stepMap[stepkey], index + 1);
+                    return this.renderProgressItem(this.stepMap[stepkey], stepkey, index + 1);
                 }
                 return null;
             })

@@ -32,10 +32,15 @@
         position: absolute;
         height: 5px;
         background: var(--primary-base-color);
-        width: 0%;
         top: 35%;
         z-index: 1;
+        transition: width 1s ease;
     }
+
+    .ActiveStep {
+        background-color: var(--primary-base-color) !important;
+    }
+
     .ProgressList {
         display: flex;
         justify-content: space-between;
@@ -53,6 +58,7 @@
         height: 5px;
         top: 30%;
         left: 0;
+        
     }
 
     .ProgressStep {
